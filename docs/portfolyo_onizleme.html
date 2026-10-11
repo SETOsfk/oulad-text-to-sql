@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OULAD Text-to-SQL · Sertan Şafak</title>
+<meta name="description" content="Soruyu SQL'e çeviren Gemini ajanı: kayıtlı demo ve ölçüm sonuçları.">
+<meta name="author" content="Sertan Şafak">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6 9h20M6 16h20M6 23h12' fill='none' stroke='%232d6a8f' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>(function(){try{var m=localStorage.getItem("pd-theme");if(m)document.documentElement.setAttribute("data-theme",m)}catch(e){}})()</script>
+<style>/* Consumer shopping audit — shared look with setosfk.github.io (IBM Plex, paper/ink, one accent). */
+
+
+
+
+
+
+:root {
+  color-scheme: light;
+  --bg: #f5f2ec; --surface: #fffdf8; --surface-2: #eee8de; --ink: #1a1612; --ink-2: #453d35; --muted: #6d6358;
+  --line: #e2d9cf; --accent: #2d6a8f; --accent-2: #4d8bb0; --accent-soft: rgba(45, 106, 143, .09);
+  --neutral-mark: #a79ea0; --good: #2f6b4f; --alt: #6b7b8c; --land: #ece4d6; --land-line: #cbbba3;
+  --s0: #6e3310; --s1: #9b2c48; --s2: #6f9a7a; --s3: #d49a2a;
+  --shadow: 0 1px 2px rgba(27, 20, 22, .05), 0 12px 32px -20px rgba(27, 20, 22, .35);
+  --f: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --m: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --r: 12px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  color-scheme: dark; --bg: #141113; --surface: #1c181a; --surface-2: #262023; --ink: #f1ebe6; --ink-2: #d4cbc6;
+  --muted: #a3999b; --line: #342c2f; --accent: #7fb6d9; --accent-2: #a9d0ea; --accent-soft: rgba(127, 182, 217, .13);
+  --neutral-mark: #6d6366; --good: #7cc4a0; --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 14px 32px -20px rgba(0, 0, 0, .9); --alt: #9aa9b8; --land: #2a2426; --land-line: #463c3f; --s0: #d9824a; --s1: #e0708d; --s2: #8fc4a0; --s3: #f0c060; } }
+:root[data-theme="dark"] {
+  color-scheme: dark; --bg: #141113; --surface: #1c181a; --surface-2: #262023; --ink: #f1ebe6; --ink-2: #d4cbc6;
+  --muted: #a3999b; --line: #342c2f; --accent: #7fb6d9; --accent-2: #a9d0ea; --accent-soft: rgba(127, 182, 217, .13);
+  --neutral-mark: #6d6366; --good: #7cc4a0; --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 14px 32px -20px rgba(0, 0, 0, .9); --alt: #9aa9b8; --land: #2a2426; --land-line: #463c3f; --s0: #d9824a; --s1: #e0708d; --s2: #8fc4a0; --s3: #f0c060; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--f); }
+a { color: inherit; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+a:hover { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+button, input, select { font: inherit; color: inherit; }
+.muted { color: var(--muted); } .mono { font-family: var(--m); } .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* top bar */
+.top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.top .in { max-width: 1180px; margin: 0 auto; padding: 8px 16px; display: flex; gap: 12px; align-items: center; }
+.brand { font-weight: 600; text-decoration: none; }
+.crumb { font: .74rem var(--m); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.sp { flex: 1; }
+.pill { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; height: 32px; padding: 0 12px; cursor: pointer; font: .8rem var(--m); }
+.pill:hover { border-color: var(--ink); }
+.pill[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* layout */
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px 80px; }
+.hero { padding: 40px 0 18px; display: grid; gap: 12px; }
+.kicker { font: .74rem var(--m); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.kicker b { color: var(--accent); font-weight: 400; }
+h1 { font-size: clamp(1.9rem, 4.2vw, 3rem); line-height: 1.08; margin: 0; letter-spacing: -.02em; max-width: 24ch; }
+.lede { font-size: clamp(1.02rem, 1.5vw, 1.18rem); color: var(--ink-2); max-width: 66ch; margin: 0; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 14px 0 30px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--ink); border-radius: 4px var(--r) var(--r) var(--r); padding: 12px 14px; box-shadow: var(--shadow); }
+.kpi.hi { border-top-color: var(--accent); }
+.kpi .l { font: .7rem var(--m); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.kpi .v { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 600; line-height: 1.15; margin: 4px 0 2px; }
+.kpi.hi .v { color: var(--accent); }
+.kpi .c { font-size: .84rem; color: var(--muted); line-height: 1.35; }
+@media (max-width: 820px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+section.block { margin: 34px 0; }
+h2 { font-size: 1.35rem; margin: 0 0 4px; letter-spacing: -.01em; }
+.sub { color: var(--muted); margin: 0 0 16px; max-width: 70ch; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); }
+
+/* explorer */
+.tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.explorer { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 18px; align-items: start; }
+@media (max-width: 960px) { .explorer { grid-template-columns: 1fr; } }
+.panel { padding: 16px; }
+.search { width: 100%; height: 44px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); padding: 0 14px; }
+.search:focus { outline: 2px solid var(--accent); }
+.results { list-style: none; margin: 10px 0 0; padding: 0; max-height: 440px; overflow: auto; }
+.results li button { width: 100%; text-align: left; border: 0; background: none; padding: 9px 10px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px; align-items: baseline; }
+.results li button:hover, .results li button[aria-current="true"] { background: var(--accent-soft); }
+.results .nm { flex: 1; min-width: 0; }
+.results .meta { font: .78rem var(--m); color: var(--muted); white-space: nowrap; }
+.fam { margin: 10px 0 4px; font: .7rem var(--m); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 3px 10px; font-size: .86rem; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.chip.static { cursor: default; }
+.chip.praise { border-style: dashed; color: var(--muted); }
+
+.meter { height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; margin: 6px 0; }
+.meter i { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width .25s; }
+.big { font-size: 2.2rem; font-weight: 600; line-height: 1; }
+
+.detail { padding: 18px; min-height: 420px; }
+.detail h3 { font-size: 1.35rem; margin: 0; line-height: 1.2; }
+.row { display: flex; gap: 14px; flex-wrap: wrap; align-items: baseline; }
+.score { font-size: 2rem; font-weight: 600; }
+.badge { font: .72rem var(--m); padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); }
+.badge.hi { background: var(--accent); color: #fff; border-color: var(--accent); }
+.vintages { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
+.sec { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.sec h4 { margin: 0 0 8px; font-size: .78rem; font-family: var(--m); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.mini { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--surface); }
+.mini b { display: block; }
+.mini .s { font-size: .84rem; color: var(--muted); }
+.mini.tr { border-left: 3px solid var(--accent); }
+.note { font-size: .84rem; color: var(--muted); }
+.btn { border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 10px; padding: 8px 14px; cursor: pointer; }
+.btn.ghost { background: none; color: var(--accent); }
+select { height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); padding: 0 10px; }
+.shops { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 6px; }
+.shops li { display: flex; gap: 10px; align-items: baseline; border-bottom: 1px dashed var(--line); padding: 6px 0; }
+.shops .d { font: .8rem var(--m); color: var(--muted); min-width: 64px; }
+.empty { color: var(--muted); padding: 40px 10px; text-align: center; }
+
+/* charts */
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .charts { grid-template-columns: 1fr; } }
+.chart { padding: 14px 16px; }
+.chart h3 { margin: 0; font-size: 1rem; }
+.chart p { margin: 2px 0 8px; font-size: .86rem; color: var(--muted); }
+svg text { fill: var(--ink-2); font: 12px var(--f); }
+svg .ax { stroke: var(--line); }
+svg .mk { fill: var(--accent); }
+svg .mk.n { fill: var(--neutral-mark); }
+svg .bar { fill: var(--accent); }
+svg .bar.n { fill: var(--neutral-mark); }
+svg .guide { stroke: var(--line); stroke-width: 2; }
+svg .hit { fill: transparent; }
+.tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); font-size: .82rem; padding: 6px 9px; border-radius: 6px; z-index: 50; opacity: 0; transition: opacity .12s; max-width: 280px; }
+details.tbl summary { cursor: pointer; font-size: .84rem; color: var(--muted); margin-top: 6px; }
+table { border-collapse: collapse; width: 100%; font-size: .86rem; }
+td, th { padding: 4px 6px; border-bottom: 1px solid var(--line); text-align: left; font-variant-numeric: tabular-nums; }
+
+.boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+@media (max-width: 800px) { .boxes { grid-template-columns: 1fr; } }
+.box { padding: 14px 18px; }
+.box h3 { margin: 0 0 6px; font-size: 1rem; }
+.box.warn { border-left: 3px solid var(--accent); }
+.box li { margin: 4px 0; }
+footer { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; font-size: .88rem; color: var(--ink-2); }
+footer b { display: block; font: .72rem var(--m); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+pre { background: var(--surface-2); padding: 8px 10px; border-radius: 8px; overflow: auto; font: .78rem var(--m); }
+
+/* age gate */
+dialog { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); color: var(--ink); max-width: 420px; padding: 22px; box-shadow: var(--shadow); }
+dialog::backdrop { background: rgba(20, 17, 19, .55); backdrop-filter: blur(3px); }
+
+/* atlas map, sliders, legends */
+svg.map { width: 100%; height: auto; max-height: 560px; display: block; margin: 8px 0 12px; }
+svg.map .land { fill: var(--land); stroke: var(--land-line); stroke-width: 1; }
+svg.map .dot { stroke: var(--ink-2); stroke-width: 1; cursor: pointer; transition: r .15s; }
+svg.map .dot.tr { stroke: var(--ink); stroke-width: 2.6; }
+svg.map .dot.sel { stroke: var(--ink); stroke-width: 3.5; }
+svg.map .dot:hover { stroke-width: 3; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: .8rem; color: var(--muted); margin: 8px 0 0; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 1px solid var(--line); }
+.legend i.ring { background: transparent; border: 2.6px solid var(--ink); }
+.results.short { max-height: 260px; }
+.sliders { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 14px; }
+.sliders label { display: grid; grid-template-columns: 116px 1fr 22px; gap: 10px; align-items: center; font-size: .9rem; }
+.sliders input[type=range] { width: 100%; accent-color: var(--accent); }
+.prof { display: grid; grid-template-columns: auto 1fr auto; gap: 5px 10px; align-items: center; font-size: .86rem; }
+.prof .meter { margin: 0; position: relative; overflow: visible; }
+.prof .meter u { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: var(--ink); opacity: .55; border-radius: 1px; }
+button.mini { font: inherit; color: inherit; text-align: left; cursor: pointer; width: 100%; }
+button.mini:hover { border-color: var(--accent); }
+ul.plain { list-style: none; padding: 0; margin: 6px 0 0; font-size: .9rem; }
+ul.plain li { padding: 3px 0; border-bottom: 1px dashed var(--line); }
+ul.plain .mono { display: inline-block; min-width: 2.2em; color: var(--accent); font-weight: 600; }
+.linkish { border: 0; background: none; padding: 0; color: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; cursor: pointer; }
+.scroll { overflow-x: auto; }
+th button.th { border: 0; background: none; padding: 0; font: inherit; font-weight: 600; cursor: pointer; }
+svg .lab { font-size: 11px; fill: var(--ink); }
+svg .tick { font-size: 11px; fill: var(--muted); }
+svg .pt { stroke: var(--surface); stroke-width: 1.5; cursor: pointer; }
+svg .bar.alt { fill: var(--alt); opacity: .75; }
+svg .guide.dash { stroke-dasharray: 4 4; }
+.shelf-wrap { max-height: 520px; overflow: auto; }
+.shelf-wrap thead th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
+@media (min-width: 961px) { .explorer > .panel { position: sticky; top: 64px; } svg.map { max-height: 470px; } .results.short { max-height: 190px; } }
+svg .iqr { stroke: var(--neutral-mark); stroke-width: 8; stroke-linecap: round; opacity: .55; }
+
+/* oulad text-to-sql demo */
+.notice { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 10px 14px; border-radius: 0 var(--r) var(--r) 0; font-size: .92rem; color: var(--ink-2); max-width: 74ch; }
+.qs { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 18px; }
+.qs .chip { font-size: .92rem; padding: 6px 12px; }
+.qs .chip.bad { border-style: dashed; }
+.demo { padding: 18px; display: grid; gap: 14px; }
+.demo pre { margin: 0; padding: 12px 14px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); font: .84rem/1.5 var(--m); white-space: pre-wrap; overflow-x: auto; }
+.demo h4 { margin: 0 0 6px; font: .72rem var(--m); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+.tbl table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+.tbl th, .tbl td { text-align: left; padding: 6px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.tbl th { font: .74rem var(--m); color: var(--muted); background: var(--surface-2); }
+.tbl tr:last-child td { border-bottom: 0; }
+.badge.ok { border-color: var(--good); color: var(--good); }
+.badge.no { border-color: var(--s1); color: var(--s1); }
+.ask { font-size: 1.1rem; padding: 12px 14px; border-radius: 10px; background: var(--accent-soft); }
+.sumtbl { margin-top: 10px; }
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="https://setosfk.github.io/">Sertan Şafak</a>
+  <span class="crumb">/ text-to-sql</span>
+  <span class="sp"></span>
+  <button class="pill" id="lang" type="button" aria-label="Language">EN</button>
+  <button class="pill" id="theme" type="button" aria-label="Theme">◐</button>
+</div></header>
+<main class="wrap">
+  <section class="hero">
+    <div class="kicker"><b>●</b> <span data-i="kicker"></span></div>
+    <h1 data-i="title"></h1>
+    <p class="lede" data-i="lede"></p>
+    <p class="notice" data-i="notice"></p>
+  </section>
+  <section class="block">
+    <h2 data-i="h2"></h2>
+    <p class="sub" data-i="sub"></p>
+    <div class="qs" id="qs"></div>
+    <div class="card demo" id="out" aria-live="polite"></div>
+  </section>
+  <section class="block">
+    <h2 data-i="h3"></h2>
+    <p class="sub" data-i="sub3"></p>
+    <div class="card tbl sumtbl"><table id="sum"></table></div>
+    <p class="note" data-i="note3"></p>
+  </section>
+  <footer>
+    <div><b data-i="fData"></b><span data-i="fDataTxt"></span></div>
+    <div><b data-i="fCode"></b><a href="https://github.com/SETOsfk/oulad-text-to-sql">github.com/SETOsfk/oulad-text-to-sql</a></div>
+  </footer>
+</main>
+<script>const $ = (s) => document.querySelector(s);
+const T = {
+  tr: {
+    kicker: "Text-to-SQL · Gemini · Açık veri", title: "Soruyu SQL'e çeviren ajan",
+    lede: "Veritabanına Türkçe ya da İngilizce soru soruyorsun, Gemini SQL yazıyor, sorgu salt-okunur çalıştırılıyor, sonuç geliyor. Veri: Open University'nin açık öğrenci verisi (OULAD), 7 tablo, 10,6 milyon satır.",
+    notice: "Bu sayfa canlı değil, kayıtlı bir demo. Aşağıdaki cevaplar ajanın gerçek çıktısı ve sorgular gerçek veride çalıştırıldı, ama yeni soru yazamazsın. (Gemini anahtarı herkese açık bir sayfaya konamaz.)",
+    h2: "Sorular", sub: "Bir soru seç. Gerçekten yanlış çıkan bir soru ve ajanın soru sorduğu iki belirsiz soru da var.",
+    h3: "Ölçüm", sub3: "60 geliştirme + 20 dondurulmuş hold-out soru. Doğru sayılması için sorgu sonucu, elle yazdığım doğru sorgunun sonucuyla aynı olmalı.",
+    note3: "Hiçbir fark istatistiksel olarak anlamlı değil (küçük kümeler, tek model, tek koşu). Ayrıntı ve karar günlüğü GitHub'da.",
+    fData: "Veri ", fDataTxt: "Kuzilek, Hlosta, Zdrahal, Open University Learning Analytics Dataset, 2017 (CC BY 4.0). Model: gemini-3.5-flash-lite.", fCode: "Kod ",
+    q: "Soru", sql: "Ajanın yazdığı SQL", res: "Sonuç", more: "ilk 12 satır", ok: "doğru", no: "yanlış",
+    goldT: "Doğru cevap (benim yazdığım sorgu)", wrongNote: "Bu soruda ajan yanlış sorgu yazdı: istenen tek bir sayı, o ise öğrenci başına satır döndürüyor. SQL çalışıyor ama mantık hatalı; lint bunu yakalamıyor.",
+    clar: "Ajan cevap yerine soru sordu", clarNote: "Soru belirsiz olduğunda model tahmin etmek yerine netleştirme istiyor. 10 belirsiz sorunun 4'ünde böyle yaptı, 80 net soruda hiç yapmadı.",
+    cfg: "Yapılandırma", dev: "Geliştirme (60)", ho: "Hold-out (20)",
+    rows: [["Sadece tablo şeması", "93,3%", "80%"], ["+ veri sözlüğü", "93,3%", "95%"], ["+ kolon değerleri", "91,7%", "90%"], ["+ lint ve tekrar deneme", "93,3%", "95%"], ["hepsi + netleştirme", "95,0%", "95%"], ["Türkçe sorular, hepsi açık", "93,3%", "95%"]]
+  },
+  en: {
+    kicker: "Text-to-SQL · Gemini · Open data", title: "An agent that turns questions into SQL",
+    lede: "You ask the database a question in Turkish or English, Gemini writes SQL, the query runs read-only, you get the result. Data: the Open University's open student dataset (OULAD), 7 tables, 10.6M rows.",
+    notice: "This page is not live; it is a recorded demo. The answers below are the agent's real output and the queries were run on the real data, but you cannot type a new question. (A Gemini key cannot sit on a public page.)",
+    h2: "Questions", sub: "Pick one. One question the agent got wrong and two ambiguous questions where it asked back are included.",
+    h3: "Evaluation", sub3: "60 dev + 20 frozen hold-out questions. An answer counts as correct only if the query result equals the result of the gold query I wrote by hand.",
+    note3: "No difference is statistically significant (small sets, one model, one run). Details and the decision log are on GitHub.",
+    fData: "Data ", fDataTxt: "Kuzilek, Hlosta, Zdrahal, Open University Learning Analytics Dataset, 2017 (CC BY 4.0). Model: gemini-3.5-flash-lite.", fCode: "Code ",
+    q: "Question", sql: "SQL written by the agent", res: "Result", more: "first 12 rows", ok: "correct", no: "wrong",
+    goldT: "Correct answer (my hand-written query)", wrongNote: "The agent got this one wrong: the question wants a single number, the query returns one row per student. The SQL runs but the logic is off; the lint does not catch it.",
+    clar: "The agent asked back instead of answering", clarNote: "When a question is ambiguous the model asks instead of guessing. It did so on 4 of 10 ambiguous questions and on none of 80 clear ones.",
+    cfg: "Configuration", dev: "Dev (60)", ho: "Hold-out (20)",
+    rows: [["Schema only", "93.3%", "80%"], ["+ data dictionary", "93.3%", "95%"], ["+ column values", "91.7%", "90%"], ["+ lint and retry", "93.3%", "95%"], ["all + clarification", "95.0%", "95%"], ["Turkish questions, all on", "93.3%", "95%"]]
+  }
+};
+let L = (navigator.language || "tr").startsWith("tr") ? "tr" : "en";
+try { L = localStorage.getItem("oulad-lang") || L; } catch (e) {}
+const t = (k) => T[L][k];
+let D = [], cur = 0;
+const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+const fmt = (v) => typeof v === "number" ? (Number.isInteger(v) ? v.toLocaleString(L) : v.toLocaleString(L, { maximumFractionDigits: 1 })) : (v === null ? "—" : esc(v));
+const table = (cols, rows) => `<div class="tbl"><table><thead><tr>${cols.map((c) => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((v) => `<td>${fmt(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+function paint() {
+  document.documentElement.lang = L;
+  document.querySelectorAll("[data-i]").forEach((n) => { const v = t(n.dataset.i); if (typeof v === "string") n.textContent = v; });
+  $("#lang").textContent = L === "tr" ? "EN" : "TR";
+  $("#qs").innerHTML = D.map((e, i) => `<button class="chip${e.ok === false ? " bad" : ""}" data-n="${i}" aria-pressed="${i === cur}">${esc((L === "tr" && e.tr) ? e.tr : e.en)}</button>`).join("");
+  const e = D[cur];
+  if (e) {
+    let h = `<div><h4>${t("q")}</h4><div class="row"><span style="font-size:1.15rem">${esc((L === "tr" && e.tr) ? e.tr : e.en)}</span>${e.clarify ? "" : `<span class="badge ${e.ok ? "ok" : "no"}">${e.ok ? t("ok") : t("no")}</span>`}</div></div>`;
+    if (e.clarify) h += `<div><h4>${t("clar")}</h4><div class="ask">${esc(e.clarify)}</div></div><p class="note">${t("clarNote")}</p>`;
+    else {
+      h += `<div><h4>${t("sql")}</h4><pre>${esc(e.sql)}</pre></div><div><h4>${t("res")}${e.n > 12 ? " · " + t("more") : ""}</h4>${table(e.cols, e.rows)}</div>`;
+      if (!e.ok) h += `<p class="note">${t("wrongNote")}</p><div><h4>${t("goldT")}</h4><pre>${esc(e.gold_sql)}</pre>${table(e.gold_cols, e.gold_rows)}</div>`;
+    }
+    $("#out").innerHTML = h;
+  }
+  $("#sum").innerHTML = `<thead><tr><th>${t("cfg")}</th><th>${t("dev")}</th><th>${t("ho")}</th></tr></thead><tbody>${t("rows").map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>`;
+}
+$("#qs").addEventListener("click", (ev) => { const b = ev.target.closest("button"); if (b) { cur = +b.dataset.n; paint(); } });
+$("#lang").addEventListener("click", () => { L = L === "tr" ? "en" : "tr"; try { localStorage.setItem("oulad-lang", L); } catch (e) {} paint(); });
+$("#theme").addEventListener("click", () => {
+  const c = document.documentElement.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const n = c === "dark" ? "light" : "dark"; document.documentElement.setAttribute("data-theme", n);
+  try { localStorage.setItem("pd-theme", n); } catch (e) {}
+});
+D = [
+ {
+  "id": "q01",
+  "tr": "Veri setinde kaç farklı öğrenci var?",
+  "en": "How many distinct students appear in the dataset?",
+  "ok": true,
+  "sql": "SELECT COUNT(DISTINCT id_student) FROM studentInfo",
+  "cols": [
+   "COUNT(DISTINCT id_student)"
+  ],
+  "rows": [
+   [
+    28785
+   ]
+  ],
+  "n": 1
+ },
+ {
+  "id": "q07",
+  "tr": "Her bölgede kaç kayıt var? Çoktan aza doğru sıralayın.",
+  "en": "How many enrolments are there in each region, from most to fewest?",
+  "ok": true,
+  "sql": "SELECT region, COUNT(*) AS kayit_sayisi FROM studentInfo GROUP BY region ORDER BY kayit_sayisi DESC",
+  "cols": [
+   "region",
+   "kayit_sayisi"
+  ],
+  "rows": [
+   [
+    "Scotland",
+    3446
+   ],
+   [
+    "East Anglian Region",
+    3340
+   ],
+   [
+    "London Region",
+    3216
+   ],
+   [
+    "South Region",
+    3092
+   ],
+   [
+    "North Western Region",
+    2906
+   ],
+   [
+    "West Midlands Region",
+    2582
+   ],
+   [
+    "South West Region",
+    2436
+   ],
+   [
+    "East Midlands Region",
+    2365
+   ],
+   [
+    "South East Region",
+    2111
+   ],
+   [
+    "Wales",
+    2086
+   ],
+   [
+    "Yorkshire Region",
+    2006
+   ],
+   [
+    "North Region",
+    1823
+   ]
+  ],
+  "n": 13
+ },
+ {
+  "id": "q29",
+  "tr": "%10-20 IMD diliminde kaç kayıt var?",
+  "en": "How many enrolments are in the 10-20% IMD band?",
+  "ok": true,
+  "sql": "SELECT count(*) FROM studentInfo WHERE imd_band = '10-20'",
+  "cols": [
+   "count(*)"
+  ],
+  "rows": [
+   [
+    3516
+   ]
+  ],
+  "n": 1
+ },
+ {
+  "id": "q17",
+  "tr": "Her modülün başarı oranı nedir (Pass veya Distinction, yüzde olarak, bir ondalık)?",
+  "en": "What is the pass rate (Pass or Distinction, in percent, one decimal) of each module?",
+  "ok": true,
+  "sql": "SELECT code_module, ROUND(100.0 * SUM(CASE WHEN final_result IN ('Pass', 'Distinction') THEN 1 ELSE 0 END) / COUNT(*), 1) AS success_rate FROM studentInfo GROUP BY code_module",
+  "cols": [
+   "code_module",
+   "success_rate"
+  ],
+  "rows": [
+   [
+    "AAA",
+    71.0
+   ],
+   [
+    "BBB",
+    47.5
+   ],
+   [
+    "CCC",
+    37.8
+   ],
+   [
+    "DDD",
+    41.6
+   ],
+   [
+    "EEE",
+    56.2
+   ],
+   [
+    "FFF",
+    47.0
+   ],
+   [
+    "GGG",
+    59.7
+   ]
+  ],
+  "n": 7
+ },
+ {
+  "id": "q42",
+  "tr": "Eksik dilimleri yok sayarak, her IMD diliminin başarı oranı nedir (Pass veya Distinction, yüzde, bir ondalık)? Dilime göre sıralayın.",
+  "en": "What is the pass rate (Pass or Distinction, percent, one decimal) for each IMD band, ignoring missing bands, ordered by band?",
+  "ok": true,
+  "sql": "SELECT imd_band, ROUND(100.0 * SUM(CASE WHEN final_result IN ('Pass', 'Distinction') THEN 1 ELSE 0 END) / COUNT(*), 1) AS success_rate FROM studentInfo WHERE imd_band IS NOT NULL GROUP BY imd_band ORDER BY imd_band ASC",
+  "cols": [
+   "imd_band",
+   "success_rate"
+  ],
+  "rows": [
+   [
+    "0-10%",
+    35.2
+   ],
+   [
+    "10-20",
+    38.6
+   ],
+   [
+    "20-30%",
+    40.7
+   ],
+   [
+    "30-40%",
+    46.9
+   ],
+   [
+    "40-50%",
+    46.6
+   ],
+   [
+    "50-60%",
+    48.8
+   ],
+   [
+    "60-70%",
+    51.9
+   ],
+   [
+    "70-80%",
+    51.5
+   ],
+   [
+    "80-90%",
+    54.1
+   ],
+   [
+    "90-100%",
+    57.5
+   ]
+  ],
+  "n": 10
+ },
+ {
+  "id": "q50",
+  "tr": "Birden fazla ders sunumuna kaydolmuş öğrencilere ait kaç kayıt var?",
+  "en": "How many enrolments belong to students who enrolled in more than one course presentation?",
+  "ok": true,
+  "sql": "SELECT COUNT(*) FROM studentRegistration WHERE id_student IN (SELECT id_student FROM studentRegistration GROUP BY id_student HAVING COUNT(DISTINCT code_module || '-' || code_presentation) > 1)",
+  "cols": [
+   "COUNT(*)"
+  ],
+  "rows": [
+   [
+    7346
+   ]
+  ],
+  "n": 1
+ },
+ {
+  "id": "q40",
+  "tr": "AAA modülü, 2013J sunumunda öğrenci başına ortalama toplam tıklama sayısı nedir?",
+  "en": "What is the average total number of clicks per student in module AAA, presentation 2013J?",
+  "ok": true,
+  "sql": "SELECT AVG(total_clicks) FROM (SELECT id_student, SUM(sum_click) AS total_clicks FROM studentVle WHERE code_module = 'AAA' AND code_presentation = '2013J' GROUP BY id_student)",
+  "cols": [
+   "AVG(total_clicks)"
+  ],
+  "rows": [
+   [
+    1715.5925925925926
+   ]
+  ],
+  "n": 1
+ },
+ {
+  "id": "q57",
+  "tr": "BBB modülü, 2013J sunumunda kaç öğrenci tüm TMA'ları teslim etti?",
+  "en": "In module BBB, presentation 2013J, how many students submitted every TMA?",
+  "ok": false,
+  "sql": "SELECT count(DISTINCT T1.id_student) FROM studentAssessment AS T1 INNER JOIN assessments AS T2 ON T1.id_assessment = T2.id_assessment WHERE T2.code_module = 'BBB' AND T2.code_presentation = '2013J' AND T2.assessment_type = 'TMA' GROUP BY T1.id_student HAVING count(DISTINCT T2.id_assessment) = (SELECT count(*) FROM assessments WHERE code_module = 'BBB' AND code_presentation = '2013J' AND assessment_type = 'TMA')",
+  "cols": [
+   "count(DISTINCT T1.id_student)"
+  ],
+  "rows": [
+   [
+    1
+   ],
+   [
+    1
+   ],
+   [
+    1
+   ],
+   [
+    1
+   ],
+   [
+    1
+   ],
+   [
+    1
+   ],
+   [
+    1
+   ],
+   [
+    1
+   ],
+   [
+    1
+   ],
+   [
+    1
+   ],
+   [
+    1
+   ],
+   [
+    1
+   ]
+  ],
+  "n": 891,
+  "gold_sql": "SELECT COUNT(*) FROM (SELECT sa.id_student FROM studentAssessment sa JOIN assessments a ON a.id_assessment=sa.id_assessment WHERE a.code_module='BBB' AND a.code_presentation='2013J' AND a.assessment_type='TMA' GROUP BY sa.id_student HAVING COUNT(DISTINCT a.id_assessment)=(SELECT COUNT(*) FROM assessments WHERE code_module='BBB' AND code_presentation='2013J' AND assessment_type='TMA'))",
+  "gold_cols": [
+   "COUNT(*)"
+  ],
+  "gold_rows": [
+   [
+    891
+   ]
+  ]
+ },
+ {
+  "id": "a03",
+  "tr": null,
+  "en": "Which region is the best?",
+  "clarify": "Which specific metric (e.g., average student score, pass rate, or total enrollment) should be used to determine the best region?"
+ },
+ {
+  "id": "a08",
+  "tr": null,
+  "en": "Which module is the hardest?",
+  "clarify": "Which metric should be used to determine the hardest module (e.g., lowest average exam score, highest fail/withdrawal rate, or lowest overall passing rate)?"
+ }
+]; paint();
+</script>
+</body>
+</html>
