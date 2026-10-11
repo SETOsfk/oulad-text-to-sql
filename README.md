@@ -1,7 +1,7 @@
 # OULAD Text-to-SQL
 
 ## Bu araç ne yapıyor
-Veritabanına soru soruyorsun, SQL bilmen gerekmiyor. Örneğin "Kaç farklı öğrenci var?" ya da "Her modülün başarı oranı nedir?" yazıyorsun. Araç soruyu Gemini'ye gönderiyor, Gemini bir SQL sorgusu yazıyor, araç bu sorguyu veritabanında çalıştırıp sonucu veriyor. Sorgu sadece okuyabilir, veriyi değiştiremez.
+Senin dilinden SQL'e anlık çeviri yapıyor. Örneğin "Kaç farklı öğrenci var?" ya da "Her modülün başarı oranı nedir?" yazıyorsun. Araç soruyu Gemini'ye gönderiyor, Gemini bunu SQL'ın anlayacağı dile çeviriyor, araç bu çeviriyi veritabanında çalıştırıp sonucu veriyor.
 
 Burada soruların sorulduğu veri: Open University'nin açık öğrenci verisi (OULAD). Öğrencilerin kayıtları, notları ve online derslerdeki tıklamaları var.
 
