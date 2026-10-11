@@ -1,11 +1,16 @@
 # OULAD Text-to-SQL
 
-Gemini'ye Open University'nin açık öğrenci verisi (OULAD) hakkında Türkçe ya da İngilizce soru soruyorum, o da SQL yazıyor, ben de sorguyu çalıştırıp sonucu veriyorum. Asıl amacım ajanı yapmak değil, ona eklediğim her şeyin gerçekten işe yarayıp yaramadığını ölçmekti.
+## Bu araç ne yapıyor
+Veritabanına soru soruyorsun, SQL bilmen gerekmiyor. Örneğin "Kaç farklı öğrenci var?" ya da "Her modülün başarı oranı nedir?" yazıyorsun. Araç soruyu Gemini'ye gönderiyor, Gemini bir SQL sorgusu yazıyor, araç bu sorguyu veritabanında çalıştırıp sonucu veriyor. Sorgu sadece okuyabilir, veriyi değiştiremez.
+
+Burada soruların sorulduğu veri: Open University'nin açık öğrenci verisi (OULAD). Öğrencilerin kayıtları, notları ve online derslerdeki tıklamaları var.
+
+Soruları Türkçe ya da İngilizce sorabilirsin. Asıl amacım aracı yapmak değil, ona eklediğim her şeyin gerçekten işe yarayıp yaramadığını ölçmekti.
 
 Veri: 7 tablo, 10,6 milyon satır (CC BY 4.0). Model: `gemini-3.5-flash-lite`, ücretsiz katman.
 
 ## Nasıl çalışıyor
-1. Modele tablo şemasını, Türkçe bir veri sözlüğünü ve az değerli kolonların değerlerini veriyorum.
+1. Modele tablo şemasını, veri sözlüğünü (kolonların anlamını ve verideki tuzakları anlatan, elle yazdığım Türkçe not dosyası: `dictionary.json`) ve az değerli kolonların değerlerini veriyorum.
 2. Model SQL yazıyor.
 3. Sorgu önce bir güvenlik kapısından geçiyor: sadece SELECT, 60 saniye sınır, en fazla 1000 satır.
 4. Sorgu hata verirse ya da anahtar kontrolüm (lint) bir şey bulursa model en fazla 2 kez tekrar deniyor.
