@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM studentInfo WHERE imd_band = '90-100%';

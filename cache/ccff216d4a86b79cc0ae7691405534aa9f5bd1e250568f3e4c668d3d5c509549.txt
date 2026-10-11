@@ -1,0 +1,7 @@
+SELECT 
+    t1.assessment_type,
+    ROUND(SUM(CASE WHEN t2.date_submitted > t1.date THEN 1 ELSE 0 END) * 100.0 / COUNT(t2.id_student), 1) AS late_submission_percentage
+FROM assessments AS t1
+JOIN studentAssessment AS t2 ON t1.id_assessment = t2.id_assessment
+WHERE t1.date IS NOT NULL
+GROUP BY t1.assessment_type;

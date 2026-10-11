@@ -1,0 +1,1 @@
+SELECT AVG(total_clicks) FROM (SELECT id_student, SUM(sum_click) AS total_clicks FROM studentVle WHERE code_module = 'AAA' AND code_presentation = '2013J' GROUP BY id_student)

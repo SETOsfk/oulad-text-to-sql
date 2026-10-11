@@ -1,0 +1,1 @@
+SELECT count(*) FROM studentAssessment sa JOIN assessments a ON sa.id_assessment = a.id_assessment WHERE sa.date_submitted > a.date;

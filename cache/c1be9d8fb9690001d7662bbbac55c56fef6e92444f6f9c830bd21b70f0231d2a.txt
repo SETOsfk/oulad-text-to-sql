@@ -1,0 +1,5 @@
+SELECT code_module 
+FROM studentInfo 
+GROUP BY code_module 
+ORDER BY SUM(CASE WHEN final_result = 'Withdrawn' THEN 1 ELSE 0 END) * 1.0 / COUNT(*) DESC 
+LIMIT 1

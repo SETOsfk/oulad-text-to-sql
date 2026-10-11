@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM studentInfo AS s WHERE NOT EXISTS (SELECT 1 FROM studentVle AS v WHERE v.code_module = s.code_module AND v.code_presentation = s.code_presentation AND v.id_student = s.id_student)

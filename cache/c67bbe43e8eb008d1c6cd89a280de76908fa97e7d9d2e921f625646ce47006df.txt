@@ -1,0 +1,1 @@
+SELECT id_student FROM studentVle WHERE code_module = 'FFF' AND code_presentation = '2014J' GROUP BY id_student ORDER BY SUM(sum_click) DESC LIMIT 5

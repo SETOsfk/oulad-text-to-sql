@@ -1,0 +1,6 @@
+SELECT COUNT(DISTINCT sv.id_student)
+FROM studentVle sv
+JOIN vle v ON sv.id_site = v.id_site
+WHERE sv.code_module = 'DDD' 
+  AND sv.code_presentation = '2013J'
+  AND v.activity_type = 'forumng';

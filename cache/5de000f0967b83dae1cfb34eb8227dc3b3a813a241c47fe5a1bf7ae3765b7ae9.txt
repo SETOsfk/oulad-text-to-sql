@@ -1,0 +1,1 @@
+SELECT region, COUNT(*) FROM studentInfo GROUP BY region ORDER BY COUNT(*) DESC

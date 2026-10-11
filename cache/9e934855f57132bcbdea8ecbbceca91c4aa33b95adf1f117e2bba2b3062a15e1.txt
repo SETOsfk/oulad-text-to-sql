@@ -1,0 +1,1 @@
+SELECT count(DISTINCT t1.id_student) FROM studentAssessment AS t1 JOIN assessments AS t2 ON t1.id_assessment = t2.id_assessment WHERE t2.code_module = 'BBB'

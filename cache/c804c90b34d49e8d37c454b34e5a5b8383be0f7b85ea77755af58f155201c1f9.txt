@@ -1,0 +1,1 @@
+SELECT si.final_result, AVG(t.total_clicks) FROM studentInfo si JOIN (SELECT id_student, SUM(sum_click) AS total_clicks FROM studentVle WHERE code_presentation = '2014J' GROUP BY id_student) t ON si.id_student = t.id_student WHERE si.code_presentation = '2014J' GROUP BY si.final_result;

@@ -1,0 +1,1 @@
+SELECT COUNT(DISTINCT id_student) FROM studentInfo WHERE final_result = 'Withdrawn'

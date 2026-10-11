@@ -1,0 +1,1 @@
+SELECT COUNT(DISTINCT id_student) FROM studentAssessment WHERE score = 100.0

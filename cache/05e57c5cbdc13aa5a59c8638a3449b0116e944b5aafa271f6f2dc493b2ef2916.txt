@@ -1,0 +1,1 @@
+SELECT code_module, COUNT(*) FROM studentRegistration WHERE date_unregistration IS NOT NULL GROUP BY code_module

@@ -1,0 +1,1 @@
+SELECT AVG(t1.score) FROM studentAssessment AS t1 JOIN studentInfo AS t2 ON t1.id_student = t2.id_student JOIN assessments AS t3 ON t1.id_assessment = t3.id_assessment AND t2.code_module = t3.code_module AND t2.code_presentation = t3.code_presentation WHERE t2.disability = 'Y';

@@ -1,0 +1,1 @@
+SELECT count(*) FROM studentAssessment AS t1 INNER JOIN assessments AS t2 ON t1.id_assessment = t2.id_assessment WHERE t1.date_submitted > t2.date

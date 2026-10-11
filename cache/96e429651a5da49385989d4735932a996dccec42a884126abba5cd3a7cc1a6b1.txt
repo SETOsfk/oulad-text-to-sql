@@ -1,0 +1,5 @@
+SELECT count(DISTINCT t.id_student || '-' || t.code_module || '-' || t.code_presentation) 
+FROM studentRegistration t 
+JOIN studentAssessment sa ON t.id_student = sa.id_student 
+JOIN assessments a ON sa.id_assessment = a.id_assessment AND t.code_module = a.code_module AND t.code_presentation = a.code_presentation
+WHERE t.date_unregistration IS NOT NULL

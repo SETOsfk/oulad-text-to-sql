@@ -1,0 +1,11 @@
+SELECT a1.code_module 
+FROM assessments a1 
+JOIN studentAssessment sa1 ON a1.id_assessment = sa1.id_assessment 
+WHERE a1.assessment_type = 'CMA' AND sa1.score IS NOT NULL
+GROUP BY a1.code_module
+HAVING AVG(sa1.score) > (
+    SELECT AVG(sa2.score) 
+    FROM assessments a2 
+    JOIN studentAssessment sa2 ON a2.id_assessment = sa2.id_assessment 
+    WHERE a2.assessment_type = 'TMA' AND a2.code_module = a1.code_module AND sa2.score IS NOT NULL
+);

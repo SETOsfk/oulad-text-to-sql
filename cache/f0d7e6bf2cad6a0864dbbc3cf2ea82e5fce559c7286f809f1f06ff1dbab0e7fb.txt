@@ -1,0 +1,1 @@
+CLARIFY: Which metric should be used to determine the hardest module (e.g., lowest average exam score, highest fail/withdrawal rate, or lowest overall passing rate)?

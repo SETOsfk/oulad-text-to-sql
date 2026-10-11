@@ -1,0 +1,1 @@
+SELECT code_module, MIN(date_registration) FROM studentRegistration GROUP BY code_module

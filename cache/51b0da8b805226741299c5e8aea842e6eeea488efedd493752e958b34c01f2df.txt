@@ -1,0 +1,1 @@
+SELECT code_module FROM studentInfo GROUP BY code_module ORDER BY AVG(studied_credits) DESC LIMIT 1

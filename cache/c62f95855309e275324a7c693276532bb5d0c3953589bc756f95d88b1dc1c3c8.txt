@@ -1,0 +1,1 @@
+SELECT region, COUNT(*) AS enrolment_count FROM studentInfo GROUP BY region ORDER BY enrolment_count DESC;

@@ -1,0 +1,1 @@
+SELECT final_result, COUNT(*) FROM studentInfo WHERE gender = 'F' AND age_band = '0-35' GROUP BY final_result

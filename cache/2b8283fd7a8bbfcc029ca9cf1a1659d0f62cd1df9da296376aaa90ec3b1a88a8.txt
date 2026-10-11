@@ -1,0 +1,8 @@
+SELECT 
+  code_module,
+  ROUND(
+    SUM(CASE WHEN final_result IN ('Pass', 'Distinction') THEN 1 ELSE 0 END) * 100.0 / COUNT(*),
+    1
+  ) AS pass_rate
+FROM studentInfo
+GROUP BY code_module

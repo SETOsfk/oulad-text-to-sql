@@ -1,0 +1,1 @@
+SELECT code_module, COUNT(*) FROM assessments WHERE assessment_type = 'Quiz' GROUP BY code_module

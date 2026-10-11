@@ -1,0 +1,1 @@
+SELECT region, COUNT(*) AS kayit_sayisi FROM studentInfo GROUP BY region ORDER BY kayit_sayisi DESC;

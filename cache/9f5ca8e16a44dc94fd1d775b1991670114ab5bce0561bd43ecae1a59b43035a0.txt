@@ -1,0 +1,5 @@
+SELECT a.code_module, COUNT(*) 
+FROM studentAssessment sa 
+JOIN assessments a ON sa.id_assessment = a.id_assessment 
+WHERE sa.is_banked = 1 
+GROUP BY a.code_module

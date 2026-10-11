@@ -1,0 +1,7 @@
+SELECT COUNT(DISTINCT sa.id_student)
+FROM studentAssessment sa
+JOIN assessments a ON sa.id_assessment = a.id_assessment
+WHERE a.code_module = 'CCC'
+  AND a.code_presentation = '2014J'
+  AND a.assessment_type = 'Exam'
+  AND sa.score IS NOT NULL;

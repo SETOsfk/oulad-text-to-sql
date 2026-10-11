@@ -1,0 +1,1 @@
+SELECT count(*) FROM studentAssessment AS sa JOIN assessments AS a ON sa.id_assessment = a.id_assessment JOIN studentInfo AS si ON sa.id_student = si.id_student AND a.code_module = si.code_module AND a.code_presentation = si.code_presentation WHERE a.assessment_type = 'Exam' AND sa.score < 40 AND si.final_result IN ('Pass', 'Distinction');

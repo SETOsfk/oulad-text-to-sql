@@ -1,0 +1,1 @@
+SELECT a.code_module, AVG(sa.score) FROM assessments a JOIN studentAssessment sa ON a.id_assessment = sa.id_assessment WHERE a.assessment_type = 'Exam' GROUP BY a.code_module

@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM studentInfo WHERE num_of_prev_attempts > 0;

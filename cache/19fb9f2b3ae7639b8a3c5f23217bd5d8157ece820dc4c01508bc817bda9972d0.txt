@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM studentRegistration WHERE id_student IN (SELECT id_student FROM studentRegistration GROUP BY id_student HAVING COUNT(DISTINCT code_presentation) > 1)

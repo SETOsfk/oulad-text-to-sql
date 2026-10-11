@@ -1,0 +1,1 @@
+SELECT code_module FROM studentInfo WHERE final_result = 'Withdrawn' GROUP BY code_module HAVING COUNT(DISTINCT id_student) > 1000

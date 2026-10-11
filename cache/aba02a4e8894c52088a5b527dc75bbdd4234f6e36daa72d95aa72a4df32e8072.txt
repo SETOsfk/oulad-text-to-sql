@@ -1,0 +1,7 @@
+SELECT region, 
+       CAST(SUM(CASE WHEN final_result IN ('Pass', 'Distinction') THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) AS pass_rate
+FROM studentInfo
+GROUP BY region
+HAVING COUNT(*) >= 1000
+ORDER BY pass_rate DESC
+LIMIT 3;

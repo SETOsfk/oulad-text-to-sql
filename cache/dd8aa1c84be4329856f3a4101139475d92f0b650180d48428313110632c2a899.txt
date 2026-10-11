@@ -1,0 +1,1 @@
+SELECT count(DISTINCT T1.id_student) FROM studentVle AS T1 INNER JOIN vle AS T2 ON T1.id_site = T2.id_site WHERE T1.code_module = 'DDD' AND T1.code_presentation = '2013J' AND T2.activity_type = 'forumng'

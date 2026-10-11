@@ -1,0 +1,1 @@
+SELECT ROUND(SUM(CASE WHEN final_result = 'Withdrawn' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) FROM studentInfo WHERE disability = 'Y'

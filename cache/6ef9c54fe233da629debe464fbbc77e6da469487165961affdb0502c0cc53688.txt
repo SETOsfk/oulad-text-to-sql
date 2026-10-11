@@ -1,0 +1,1 @@
+SELECT t1.code_module, COUNT(*) FROM assessments AS t1 JOIN studentAssessment AS t2 ON t1.id_assessment = t2.id_assessment WHERE t2.is_banked = 1 GROUP BY t1.code_module

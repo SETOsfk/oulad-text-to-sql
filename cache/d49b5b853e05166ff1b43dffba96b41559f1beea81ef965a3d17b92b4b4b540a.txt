@@ -1,0 +1,1 @@
+SELECT final_result, AVG(date_registration) FROM studentInfo JOIN studentRegistration USING (code_module, code_presentation, id_student) GROUP BY final_result

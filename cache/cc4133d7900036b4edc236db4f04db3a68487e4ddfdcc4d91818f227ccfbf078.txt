@@ -1,0 +1,1 @@
+SELECT code_presentation, COUNT(*) FROM studentRegistration WHERE code_module = 'DDD' GROUP BY code_presentation

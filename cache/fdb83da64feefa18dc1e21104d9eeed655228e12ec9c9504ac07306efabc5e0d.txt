@@ -1,0 +1,11 @@
+SELECT code_module, assessment_type
+FROM (
+  SELECT a.code_module, a.assessment_type, 
+         AVG(sa.score) AS avg_score,
+         ROW_NUMBER() OVER (PARTITION BY a.code_module ORDER BY AVG(sa.score) DESC) as rn
+  FROM assessments a
+  JOIN studentAssessment sa ON a.id_assessment = sa.id_assessment
+  WHERE sa.score IS NOT NULL
+  GROUP BY a.code_module, a.assessment_type
+)
+WHERE rn = 1

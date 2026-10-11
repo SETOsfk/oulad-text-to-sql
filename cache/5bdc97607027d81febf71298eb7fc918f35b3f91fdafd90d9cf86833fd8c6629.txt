@@ -1,0 +1,13 @@
+SELECT highest_education, 
+       ROUND(100.0 * SUM(CASE WHEN final_result IN ('Pass', 'Distinction') THEN 1 ELSE 0 END) / COUNT(*), 1) AS pass_rate
+FROM studentInfo
+GROUP BY highest_education
+ORDER BY 
+  CASE highest_education
+    WHEN 'Post Graduate Qualification' THEN 1
+    WHEN 'HE Qualification' THEN 2
+    WHEN 'A Level or Equivalent' THEN 3
+    WHEN 'Lower Than A Level' THEN 4
+    WHEN 'No Formal quals' THEN 5
+    ELSE 6
+  END;

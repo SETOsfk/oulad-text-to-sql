@@ -1,0 +1,6 @@
+SELECT a.code_module 
+FROM assessments a 
+JOIN studentAssessment sa ON a.id_assessment = sa.id_assessment 
+WHERE a.assessment_type IN ('CMA', 'TMA') AND sa.score IS NOT NULL 
+GROUP BY a.code_module 
+HAVING AVG(CASE WHEN a.assessment_type = 'CMA' THEN sa.score END) > AVG(CASE WHEN a.assessment_type = 'TMA' THEN sa.score END)

@@ -1,0 +1,1 @@
+SELECT code_module, COUNT(*) AS kayit_sayisi FROM studentInfo GROUP BY code_module ORDER BY kayit_sayisi DESC;

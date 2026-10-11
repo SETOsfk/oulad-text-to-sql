@@ -1,0 +1,1 @@
+SELECT AVG(sa.date_submitted - sr.date_registration) FROM studentAssessment sa JOIN studentRegistration sr ON sa.id_student = sr.id_student GROUP BY sa.id_assessment, sa.id_student

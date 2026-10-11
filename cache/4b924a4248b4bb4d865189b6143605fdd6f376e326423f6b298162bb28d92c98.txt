@@ -1,0 +1,7 @@
+SELECT v.activity_type
+FROM studentVle sv
+JOIN vle v ON sv.id_site = v.id_site
+WHERE sv.code_presentation = '2014J'
+GROUP BY v.activity_type
+ORDER BY COUNT(DISTINCT sv.id_student) DESC
+LIMIT 1;

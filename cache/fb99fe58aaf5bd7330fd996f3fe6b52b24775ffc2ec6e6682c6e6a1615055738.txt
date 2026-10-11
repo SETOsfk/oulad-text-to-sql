@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM studentInfo WHERE region = 'Wales' AND final_result = 'Fail';

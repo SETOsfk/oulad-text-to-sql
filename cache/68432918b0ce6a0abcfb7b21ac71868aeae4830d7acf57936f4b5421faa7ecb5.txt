@@ -1,0 +1,4 @@
+SELECT code_module, 
+       ROUND(100.0 * SUM(CASE WHEN date_unregistration < 0 THEN 1 ELSE 0 END) / COUNT(*), 2) AS percentage_unregistered_before_start
+FROM studentRegistration
+GROUP BY code_module;

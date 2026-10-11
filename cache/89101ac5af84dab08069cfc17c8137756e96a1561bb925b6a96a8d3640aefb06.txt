@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM studentRegistration WHERE date_registration > 0

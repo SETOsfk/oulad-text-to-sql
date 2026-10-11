@@ -1,0 +1,90 @@
+{
+  "_kaynak": "OULAD (Kuzilek ve ark. 2017, Scientific Data 4:170171), CC BY 4.0. Satır sayıları makaleyle eşleşir. Tarih alanları 'gün' ve dersin başlangıcına göredir (negatif = başlamadan önce).",
+  "tables": {
+    "courses": {
+      "desc": "Ders sunumları (modül + dönem). 22 satır.",
+      "columns": {
+        "code_module": "Ders kodu (AAA..GGG).",
+        "code_presentation": "Sunum: Yıl+B = Şubat başlangıç, Yıl+J = Ekim başlangıç (ör. 2013J).",
+        "module_presentation_length": "Sunum uzunluğu, gün."
+      }
+    },
+    "assessments": {
+      "desc": "Değerlendirmeler (ödev/sınav). 206 satır. Anahtar: id_assessment.",
+      "columns": {
+        "id_assessment": "Değerlendirme kimliği (PK).",
+        "code_module": "Ders kodu.",
+        "code_presentation": "Sunum kodu.",
+        "assessment_type": "TMA = öğretmen notlu ödev, CMA = bilgisayar notlu ödev, Exam = final sınavı.",
+        "date": "Son teslim günü (dersin başlangıcına göre). Exam satırlarında 11 tanesi NULL: sınav tarihi sunumun son gününe denk gelir, tabloda yok.",
+        "weight": "Ağırlık, yüzde. Kontrol edilen sunumlarda TMA+CMA ağırlık toplamı 100, Exam ayrıca 100."
+      }
+    },
+    "vle": {
+      "desc": "Sanal öğrenme ortamı (VLE) materyalleri. 6.364 satır. Anahtar: id_site.",
+      "columns": {
+        "id_site": "Materyal kimliği (PK).",
+        "code_module": "Ders kodu.",
+        "code_presentation": "Sunum kodu.",
+        "activity_type": "Materyal türü: resource, subpage, oucontent, url, forumng (forum), quiz, page, homepage vb.",
+        "week_from": "Materyalin planlanan başlangıç haftası; çoğu NULL.",
+        "week_to": "Planlanan bitiş haftası; çoğu NULL."
+      }
+    },
+    "studentInfo": {
+      "desc": "Öğrenci-sunum kaydı: demografi ve ders sonucu. 32.593 satır. Bir öğrenci birden fazla sunumda olabilir; PK (code_module, code_presentation, id_student).",
+      "columns": {
+        "code_module": "Ders kodu.",
+        "code_presentation": "Sunum kodu.",
+        "id_student": "Anonim öğrenci kimliği (tek başına benzersiz DEĞİL).",
+        "gender": "M / F.",
+        "region": "Öğrencinin bölgesi (13 Birleşik Krallık/İrlanda bölgesi).",
+        "highest_education": "En yüksek öğrenim: No Formal quals < Lower Than A Level < A Level or Equivalent < HE Qualification < Post Graduate Qualification.",
+        "imd_band": "Yoksunluk endeksi dilimi (0-10% en yoksun bölge). Yazım tutarsız: '10-20' yüzde işaretsiz, diğerleri '%' ile. 1.111 NULL.",
+        "age_band": "0-35, 35-55, 55<=.",
+        "num_of_prev_attempts": "Bu dersi daha önce deneme sayısı.",
+        "studied_credits": "Öğrencinin o sunumda okuduğu toplam kredi.",
+        "disability": "Y / N.",
+        "final_result": "Distinction, Pass, Fail, Withdrawn. 'Başarılı' = Pass veya Distinction."
+      }
+    },
+    "studentRegistration": {
+      "desc": "Kayıt ve kayıt silme tarihleri. 32.593 satır; PK (code_module, code_presentation, id_student).",
+      "columns": {
+        "code_module": "Ders kodu.",
+        "code_presentation": "Sunum kodu.",
+        "id_student": "Öğrenci kimliği.",
+        "date_registration": "Kayıt günü (dersin başlangıcına göre, çoğu negatif).",
+        "date_unregistration": "Kayıt sildirme günü; silmeyenlerde NULL. NOT: 10.072 dolu değer var, final_result='Withdrawn' sayısı 10.156 → ikisi birebir aynı değil."
+      }
+    },
+    "studentAssessment": {
+      "desc": "Öğrencinin teslim ettiği değerlendirmeler ve notları. 173.912 satır; PK (id_assessment, id_student).",
+      "columns": {
+        "id_assessment": "assessments.id_assessment.",
+        "id_student": "Öğrenci kimliği. Dikkat: dersi/sunumu bulmak için assessments üzerinden join gerekir.",
+        "date_submitted": "Teslim günü.",
+        "is_banked": "1 = not önceki sunumdan aktarıldı.",
+        "score": "Not, 0-100. 173 satırda NULL."
+      }
+    },
+    "studentVle": {
+      "desc": "Öğrencinin VLE materyalleriyle günlük etkileşimi. 10.655.280 satır (büyük tablo; filtresiz taramaktan kaçın).",
+      "columns": {
+        "code_module": "Ders kodu.",
+        "code_presentation": "Sunum kodu.",
+        "id_student": "Öğrenci kimliği.",
+        "id_site": "vle.id_site.",
+        "date": "Etkileşim günü.",
+        "sum_click": "O gün o materyaldeki tıklama sayısı."
+      }
+    }
+  },
+  "joins": [
+    "studentInfo / studentRegistration / studentVle: (code_module, code_presentation, id_student)",
+    "studentAssessment.id_assessment = assessments.id_assessment",
+    "studentAssessment -> studentInfo: assessments (code_module, code_presentation) + id_student",
+    "studentVle.id_site = vle.id_site",
+    "courses: (code_module, code_presentation)"
+  ]
+}

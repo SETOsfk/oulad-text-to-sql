@@ -1,0 +1,1 @@
+SELECT avg(T1.score) FROM studentAssessment AS T1 INNER JOIN studentInfo AS T2 ON T1.id_student = T2.id_student WHERE T2.disability = 'Y'

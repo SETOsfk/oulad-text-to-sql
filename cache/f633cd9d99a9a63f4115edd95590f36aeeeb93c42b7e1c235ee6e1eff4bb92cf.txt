@@ -1,0 +1,1 @@
+SELECT v.activity_type FROM vle v JOIN studentVle sv ON v.id_site = sv.id_site GROUP BY v.activity_type ORDER BY SUM(sv.sum_click) DESC LIMIT 5

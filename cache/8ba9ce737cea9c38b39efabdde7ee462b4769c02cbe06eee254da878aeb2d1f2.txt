@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM studentInfo WHERE highest_education = 'No Formal quals';

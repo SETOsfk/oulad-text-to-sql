@@ -1,0 +1,1 @@
+SELECT count(DISTINCT id_student) FROM studentInfo

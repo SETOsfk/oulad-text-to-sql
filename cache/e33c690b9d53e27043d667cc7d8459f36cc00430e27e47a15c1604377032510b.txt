@@ -1,0 +1,11 @@
+SELECT COUNT(DISTINCT s.id_student || '-' || s.code_module || '-' || s.code_presentation) 
+FROM studentInfo s
+WHERE s.final_result = 'Withdrawn' 
+  AND NOT EXISTS (
+    SELECT 1 
+    FROM studentAssessment sa 
+    JOIN assessments a ON sa.id_assessment = a.id_assessment 
+    WHERE sa.id_student = s.id_student 
+      AND a.code_module = s.code_module 
+      AND a.code_presentation = s.code_presentation
+  )

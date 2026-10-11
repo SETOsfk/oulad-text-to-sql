@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM studentInfo WHERE highest_education = 'Post Graduate Qualification' AND final_result = 'Withdrawn';

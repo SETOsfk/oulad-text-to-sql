@@ -1,0 +1,1 @@
+SELECT AVG(sa.date_submitted - sr.date_registration) FROM studentAssessment sa JOIN assessments a ON sa.id_assessment = a.id_assessment JOIN studentRegistration sr ON sa.id_student = sr.id_student AND a.code_module = sr.code_module AND a.code_presentation = sr.code_presentation

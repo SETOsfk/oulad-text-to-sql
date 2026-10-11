@@ -1,0 +1,1 @@
+SELECT T1.final_result, AVG(T3.score) FROM studentInfo AS T1 JOIN assessments AS T2 ON T1.code_module = T2.code_module AND T1.code_presentation = T2.code_presentation JOIN studentAssessment AS T3 ON T1.id_student = T3.id_student AND T2.id_assessment = T3.id_assessment GROUP BY T1.final_result

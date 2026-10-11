@@ -1,0 +1,5 @@
+SELECT 
+  gender, 
+  ROUND(100.0 * SUM(CASE WHEN final_result = 'Withdrawn' THEN 1 ELSE 0 END) / COUNT(*), 1) AS withdrawn_rate 
+FROM studentInfo 
+GROUP BY gender

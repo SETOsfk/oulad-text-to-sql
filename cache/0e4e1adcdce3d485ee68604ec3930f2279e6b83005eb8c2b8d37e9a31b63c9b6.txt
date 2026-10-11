@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM studentInfo si WHERE si.final_result = 'Withdrawn' AND NOT EXISTS (SELECT 1 FROM studentAssessment sa JOIN assessments a ON sa.id_assessment = a.id_assessment WHERE sa.id_student = si.id_student AND a.code_module = si.code_module AND a.code_presentation = si.code_presentation)

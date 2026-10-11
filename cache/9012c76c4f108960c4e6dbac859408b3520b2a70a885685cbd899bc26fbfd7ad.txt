@@ -1,0 +1,1 @@
+SELECT code_module, COUNT(*) AS enrolment_count FROM studentRegistration GROUP BY code_module ORDER BY enrolment_count DESC;

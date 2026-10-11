@@ -1,0 +1,1 @@
+SELECT COUNT(DISTINCT t1.id_student) FROM studentVle AS t1 JOIN vle AS t2 ON t1.id_site = t2.id_site WHERE t1.code_module = 'FFF' AND t1.code_presentation = '2013J' AND t2.activity_type = 'quiz'

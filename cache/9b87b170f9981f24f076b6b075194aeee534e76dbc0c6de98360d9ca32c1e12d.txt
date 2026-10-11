@@ -1,0 +1,1 @@
+SELECT count(*) FROM studentInfo WHERE imd_band IS NULL OR imd_band = '';

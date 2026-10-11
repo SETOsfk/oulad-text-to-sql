@@ -1,0 +1,6 @@
+SELECT id_student, SUM(sum_click) AS total_clicks
+FROM studentVle
+WHERE code_module = 'FFF' AND code_presentation = '2014J'
+GROUP BY id_student
+ORDER BY total_clicks DESC
+LIMIT 5;

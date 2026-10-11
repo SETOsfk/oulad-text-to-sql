@@ -1,0 +1,5 @@
+SELECT code_module 
+FROM studentInfo 
+GROUP BY code_module 
+ORDER BY CAST(SUM(CASE WHEN final_result = 'Withdrawn' THEN 1 ELSE 0 END) AS REAL) / COUNT(*) DESC 
+LIMIT 1

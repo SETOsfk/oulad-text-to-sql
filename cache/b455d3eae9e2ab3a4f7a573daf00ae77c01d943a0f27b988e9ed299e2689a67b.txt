@@ -1,0 +1,1 @@
+SELECT count(*) FROM studentInfo WHERE age_band = '55<=';

@@ -1,0 +1,6 @@
+data
+*.db
+cache
+results
+.venv
+__pycache__

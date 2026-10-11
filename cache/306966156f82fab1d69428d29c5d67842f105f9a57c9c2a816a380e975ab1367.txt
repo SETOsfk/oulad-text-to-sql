@@ -1,0 +1,1 @@
+SELECT code_module, code_presentation FROM assessments GROUP BY code_module, code_presentation ORDER BY count(*) DESC LIMIT 1

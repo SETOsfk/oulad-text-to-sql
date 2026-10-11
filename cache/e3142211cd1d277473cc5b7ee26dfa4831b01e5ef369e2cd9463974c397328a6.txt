@@ -1,0 +1,6 @@
+SELECT v.activity_type, SUM(s.sum_click) AS total_clicks
+FROM studentVle s
+JOIN vle v ON s.id_site = v.id_site
+GROUP BY v.activity_type
+ORDER BY total_clicks DESC
+LIMIT 5;

@@ -1,0 +1,1 @@
+SELECT c.code_module, c.code_presentation FROM courses c EXCEPT SELECT a.code_module, a.code_presentation FROM assessments a WHERE a.assessment_type = 'CMA'

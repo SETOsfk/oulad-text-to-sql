@@ -1,0 +1,10 @@
+{"id": "a01", "question": "How many students passed?", "why_ambiguous": "enrolments vs distinct students; Pass only or Pass+Distinction"}
+{"id": "a02", "question": "What is the average score?", "why_ambiguous": "which assessments (TMA/CMA/Exam), which module"}
+{"id": "a03", "question": "Which region is the best?", "why_ambiguous": "'best' by what metric"}
+{"id": "a04", "question": "How many students dropped out?", "why_ambiguous": "Withdrawn result vs unregistration date differ (10,156 vs 10,072)"}
+{"id": "a05", "question": "Show me the most active students.", "why_ambiguous": "active by clicks, submissions or both; which course"}
+{"id": "a06", "question": "How many students are there in 2014?", "why_ambiguous": "presentations 2014B and 2014J; students vs enrolments"}
+{"id": "a07", "question": "What is the failure rate?", "why_ambiguous": "Fail only or Fail+Withdrawn; overall or per module"}
+{"id": "a08", "question": "Which module is the hardest?", "why_ambiguous": "hardest by fail rate, score, withdrawal?"}
+{"id": "a09", "question": "How many students are disadvantaged?", "why_ambiguous": "disadvantaged is not defined; IMD band threshold"}
+{"id": "a10", "question": "How long do students take to submit?", "why_ambiguous": "relative to due date or course start; which assessments"}

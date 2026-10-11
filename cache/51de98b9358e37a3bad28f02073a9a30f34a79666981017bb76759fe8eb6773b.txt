@@ -1,0 +1,1 @@
+SELECT activity_type FROM vle GROUP BY activity_type ORDER BY COUNT(*) DESC LIMIT 1

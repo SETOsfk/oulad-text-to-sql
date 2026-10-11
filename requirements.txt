@@ -1,0 +1,5 @@
+google-genai
+pytest
+fastapi
+uvicorn
+httpx

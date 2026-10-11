@@ -1,0 +1,1 @@
+SELECT AVG(T1.score) FROM studentAssessment AS T1 JOIN assessments AS T2 ON T1.id_assessment = T2.id_assessment WHERE T2.assessment_type = 'TMA'

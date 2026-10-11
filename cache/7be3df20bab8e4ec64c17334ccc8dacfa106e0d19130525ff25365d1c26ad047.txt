@@ -1,0 +1,1 @@
+SELECT CAST(SUM(CASE WHEN final_result = 'Fail' THEN 1 ELSE 0 END) AS REAL) / COUNT(*) FROM studentInfo

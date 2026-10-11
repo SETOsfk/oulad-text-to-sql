@@ -1,0 +1,1 @@
+SELECT count(DISTINCT T1.id_student) FROM studentRegistration AS T1 INNER JOIN studentAssessment AS T2 ON T1.id_student = T2.id_student WHERE T1.date_unregistration IS NOT NULL

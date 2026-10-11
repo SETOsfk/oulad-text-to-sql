@@ -1,0 +1,1 @@
+SELECT avg(t1.score) FROM studentAssessment AS t1 INNER JOIN assessments AS t2 ON t1.id_assessment = t2.id_assessment INNER JOIN studentInfo AS t3 ON t2.code_module = t3.code_module AND t2.code_presentation = t3.code_presentation AND t1.id_student = t3.id_student WHERE t2.code_module = 'CCC' AND t2.assessment_type = 'TMA' AND t3.final_result = 'Distinction'

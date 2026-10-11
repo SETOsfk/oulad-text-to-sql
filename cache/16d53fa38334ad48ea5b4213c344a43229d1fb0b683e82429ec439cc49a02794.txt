@@ -1,0 +1,1 @@
+SELECT count(*) FROM studentInfo WHERE imd_band = '10-20'

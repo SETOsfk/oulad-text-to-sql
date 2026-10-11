@@ -1,0 +1,1 @@
+SELECT age_band FROM studentInfo GROUP BY age_band ORDER BY count(*) DESC LIMIT 1

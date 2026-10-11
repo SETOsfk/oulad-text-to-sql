@@ -1,0 +1,1 @@
+SELECT AVG(t.total_clicks) FROM (SELECT v.code_module, v.code_presentation, v.id_student, SUM(v.sum_click) AS total_clicks FROM studentVle v JOIN studentInfo s ON v.code_module = s.code_module AND v.code_presentation = s.code_presentation AND v.id_student = s.id_student WHERE s.final_result = 'Fail' GROUP BY v.code_module, v.code_presentation, v.id_student) t

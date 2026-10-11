@@ -1,0 +1,1 @@
+SELECT count(DISTINCT T1.id_student) FROM studentInfo AS T1 WHERE T1.final_result = 'Withdrawn' AND NOT EXISTS (SELECT 1 FROM studentAssessment AS T2 WHERE T2.id_student = T1.id_student);

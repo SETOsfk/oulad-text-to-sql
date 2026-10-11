@@ -1,0 +1,1 @@
+SELECT AVG(module_presentation_length) FROM courses;

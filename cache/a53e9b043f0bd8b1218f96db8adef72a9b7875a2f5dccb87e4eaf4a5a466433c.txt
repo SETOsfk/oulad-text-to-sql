@@ -1,0 +1,1 @@
+SELECT a.code_module, AVG(sa.score) FROM studentAssessment sa JOIN assessments a ON sa.id_assessment = a.id_assessment JOIN studentInfo si ON a.code_module = si.code_module AND a.code_presentation = si.code_presentation AND sa.id_student = si.id_student WHERE a.assessment_type = 'TMA' AND si.final_result IN ('Pass', 'Distinction') GROUP BY a.code_module

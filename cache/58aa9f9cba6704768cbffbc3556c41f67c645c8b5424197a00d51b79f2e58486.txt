@@ -1,0 +1,1 @@
+SELECT count(DISTINCT t1.id_student) FROM studentAssessment AS t1 INNER JOIN assessments AS t2 ON t1.id_assessment = t2.id_assessment WHERE t2.code_module = 'CCC' AND t2.code_presentation = '2014J' AND t2.assessment_type = 'Exam' AND t1.score IS NOT NULL

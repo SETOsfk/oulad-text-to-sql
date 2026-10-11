@@ -1,0 +1,1 @@
+SELECT count(*) FROM studentInfo WHERE disability = 'Y' AND final_result = 'Distinction'

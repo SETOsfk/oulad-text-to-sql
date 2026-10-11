@@ -1,0 +1,1 @@
+SELECT count(*) FROM studentInfo WHERE final_result = 'Withdrawn' AND id_student NOT IN (SELECT id_student FROM studentAssessment);

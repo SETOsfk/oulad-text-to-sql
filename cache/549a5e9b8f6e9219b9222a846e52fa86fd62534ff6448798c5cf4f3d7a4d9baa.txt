@@ -1,0 +1,14 @@
+SELECT COUNT(DISTINCT sa.id_student)
+FROM studentAssessment sa
+JOIN assessments a ON sa.id_assessment = a.id_assessment
+WHERE a.code_module = 'BBB' 
+  AND a.code_presentation = '2013J' 
+  AND a.assessment_type = 'TMA'
+GROUP BY sa.id_student
+HAVING COUNT(DISTINCT a.id_assessment) = (
+    SELECT COUNT(*) 
+    FROM assessments 
+    WHERE code_module = 'BBB' 
+      AND code_presentation = '2013J' 
+      AND assessment_type = 'TMA'
+);

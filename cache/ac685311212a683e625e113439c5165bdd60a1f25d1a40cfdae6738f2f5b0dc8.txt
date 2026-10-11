@@ -1,0 +1,9 @@
+SELECT code_module, id_assessment
+FROM (
+    SELECT a.code_module, sa.id_assessment, AVG(sa.score) as avg_score,
+           RANK() OVER(PARTITION BY a.code_module ORDER BY AVG(sa.score) DESC) as rnk
+    FROM studentAssessment sa
+    JOIN assessments a ON sa.id_assessment = a.id_assessment
+    GROUP BY a.code_module, sa.id_assessment
+)
+WHERE rnk = 1;

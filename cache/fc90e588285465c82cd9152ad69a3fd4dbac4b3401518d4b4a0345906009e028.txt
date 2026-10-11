@@ -1,0 +1,1 @@
+SELECT code_module, COUNT(*) FROM vle WHERE activity_type = 'quiz' GROUP BY code_module
